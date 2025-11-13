@@ -103,8 +103,37 @@ def edit_task():
 
 
 def delete_task():
-	"""Placeholder: ลบงาน (ยังไม่ได้ implement)"""
-	pass
+	"""ลบงานโดยให้ผู้ใช้เลือกจากลำดับ (index) และยืนยันก่อนลบ
+
+	จะตรวจสอบลำดับที่ป้อนมาว่าเป็นตัวเลขและอยู่ในช่วงหรือไม่
+	"""
+	global tasks
+
+	if not tasks:
+		print("ไม่มีงานในรายการ")
+		return
+
+	print("\nเลือกงานที่ต้องการลบ:")
+	for idx, t in enumerate(tasks, start=1):
+		print(f"{idx}. {t.get('title')} (ID:{t.get('id')}) - {'เสร็จแล้ว' if t.get('completed') else 'ยังไม่เสร็จ'}")
+
+	choice = input("ป้อนลำดับงานที่ต้องการลบ: ").strip()
+	if not choice.isdigit():
+		print("ลำดับไม่ถูกต้อง ต้องเป็นตัวเลข")
+		return
+
+	index = int(choice)
+	if index < 1 or index > len(tasks):
+		print("ลำดับไม่ถูกต้อง (อยู่นอกช่วง)")
+		return
+
+	task = tasks[index - 1]
+	confirm = input(f"ต้องการลบงานนี้จริงหรือไม่ (y/n): ").strip().lower()
+	if confirm == 'y':
+		del tasks[index - 1]
+		print("ลบงานเรียบร้อย")
+	else:
+		print("ยกเลิกการลบ")
 
 
 def exit_program():
