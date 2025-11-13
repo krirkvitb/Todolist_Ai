@@ -1,4 +1,39 @@
+import json
+import os
+
+DATA_FILE = os.path.join(os.path.dirname(__file__), "tasks.json")
+
 tasks = []
+
+
+def save_tasks():
+	"""บันทึกรายการ `tasks` ลงไฟล์ `tasks.json` (UTF-8)."""
+	global tasks
+	try:
+		with open(DATA_FILE, 'w', encoding='utf-8') as f:
+			json.dump(tasks, f, ensure_ascii=False, indent=2)
+		print(f"บันทึกงานไปยัง {DATA_FILE}")
+	except Exception as e:
+		print(f"เกิดข้อผิดพลาดขณะบันทึก: {e}")
+
+
+def load_tasks():
+	"""โหลดรายการ `tasks` จากไฟล์ `tasks.json` ถ้าไม่มีไฟล์จะเริ่มจากรายการว่าง"""
+	global tasks
+	if not os.path.exists(DATA_FILE):
+		tasks = []
+		return
+	try:
+		with open(DATA_FILE, 'r', encoding='utf-8') as f:
+			data = json.load(f)
+			if isinstance(data, list):
+				tasks = data
+			else:
+				print("ไฟล์ tasks.json มีรูปแบบไม่ถูกต้อง — เริ่มจากรายการว่าง")
+				tasks = []
+	except Exception as e:
+		print(f"ไม่สามารถโหลดไฟล์ tasks.json: {e}")
+		tasks = []
 
 
 def add_task():
@@ -137,8 +172,10 @@ def delete_task():
 
 
 def exit_program():
-	"""Placeholder: ออกจากโปรแกรม (ยังไม่ได้ implement)"""
-	pass
+	"""บันทึกข้อมูลก่อนออกจากโปรแกรม"""
+	# บันทึกก่อนออก
+	save_tasks()
+	print("บันทึกข้อมูลก่อนออกจากโปรแกรมเรียบร้อย")
 
 
 def main():
@@ -168,4 +205,13 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+	# โหลดงานจากไฟล์เมื่อเริ่มโปรแกรม
+	load_tasks()
+	try:
+		main()
+	except KeyboardInterrupt:
+		print("\nรับการยกเลิกจากผู้ใช้")
+	finally:
+		# รับรองว่าบันทึกข้อมูลก่อนโปรแกรมปิด
+		save_tasks()
+		print("ออกจากโปรแกรม")
