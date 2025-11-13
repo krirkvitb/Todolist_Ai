@@ -59,8 +59,47 @@ def view_tasks():
 
 
 def edit_task():
-	"""Placeholder: แก้ไขงาน (ยังไม่ได้ implement)"""
-	pass
+	"""แก้ไขข้อมูลงานโดยให้ผู้ใช้เลือกจากลำดับ (index)
+
+	ผู้ใช้สามารถแก้ `title`, `description` และ `completed` ได้
+	จะตรวจสอบลำดับที่ป้อนมาว่าถูกต้องหรือไม่ (1..len(tasks))
+	"""
+	global tasks
+
+	if not tasks:
+		print("ไม่มีงานในรายการ")
+		return
+
+	print("\nเลือกงานที่ต้องการแก้ไข (ป้อนลำดับ)")
+	for idx, t in enumerate(tasks, start=1):
+		print(f"{idx}. {t.get('title')} (ID:{t.get('id')}) - {'เสร็จแล้ว' if t.get('completed') else 'ยังไม่เสร็จ'}")
+
+	choice = input("ป้อนลำดับงาน (หมายเลข): ").strip()
+	if not choice.isdigit():
+		print("ลำดับไม่ถูกต้อง ต้องเป็นตัวเลข")
+		return
+
+	index = int(choice)
+	if index < 1 or index > len(tasks):
+		print("ลำดับไม่ถูกต้อง (อยู่นอกช่วง)")
+		return
+
+	task = tasks[index - 1]
+	print(f"แก้ไขงาน ID={task.get('id')}, ชื่อเรื่องปัจจุบัน: {task.get('title')}")
+
+	new_title = input("ชื่อเรื่องใหม่ (กด Enter เพื่อไม่เปลี่ยน): ").strip()
+	if new_title:
+		task['title'] = new_title
+
+	new_description = input("รายละเอียดใหม่ (กด Enter เพื่อไม่เปลี่ยน): ").strip()
+	if new_description:
+		task['description'] = new_description
+
+	new_completed = input("สถานะเสร็จแล้ว? (y = เสร็จ / n = ยังไม่เสร็จ, กด Enter เพื่อไม่เปลี่ยน): ").strip().lower()
+	if new_completed in ('y', 'n'):
+		task['completed'] = (new_completed == 'y')
+
+	print("บันทึกการแก้ไขเรียบร้อย")
 
 
 def delete_task():
