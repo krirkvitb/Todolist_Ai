@@ -40,8 +40,22 @@ def add_task():
 
 
 def view_tasks():
-	"""Placeholder: ดูงานทั้งหมด (ยังไม่ได้ implement)"""
-	pass
+	"""แสดงงานทั้งหมดจากตัวแปร global `tasks` (อ่านง่ายเป็นภาษาไทย)"""
+	global tasks
+
+	if not tasks:
+		print("ไม่มีงานในรายการ")
+		return
+
+	print("\nรายการงานทั้งหมด:")
+	for t in tasks:
+		print("-" * 40)
+		print(f"ID: {t.get('id')}")
+		print(f"ชื่อเรื่อง: {t.get('title')}")
+		print(f"รายละเอียด: {t.get('description') or '-'}")
+		print(f"วันครบกำหนด: {t.get('due_date') or '-'}")
+		print(f"สถานะ: {'เสร็จแล้ว' if t.get('completed') else 'ยังไม่เสร็จ'}")
+	print("-" * 40)
 
 
 def edit_task():
