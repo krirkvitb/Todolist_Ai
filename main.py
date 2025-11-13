@@ -1,6 +1,42 @@
+tasks = []
+
+
 def add_task():
-	"""Placeholder: เพิ่มงานใหม่ (ยังไม่ได้ implement)"""
-	pass
+	"""รับข้อมูลงานใหม่จากผู้ใช้และเพิ่มลงในตัวแปร global `tasks`.
+
+	โครงสร้างงาน: dict มี key: id, title, description, due_date, completed
+	"""
+	global tasks
+
+	# หา id ถัดไป (incremental)
+	if tasks:
+		try:
+			next_id = max(t.get('id', 0) for t in tasks) + 1
+		except Exception:
+			next_id = 1
+	else:
+		next_id = 1
+
+	# รับข้อมูลจากผู้ใช้
+	while True:
+		title = input("ชื่อเรื่อง: ").strip()
+		if title:
+			break
+		print("ชื่อเรื่องห้ามว่าง กรุณากรอกใหม่")
+
+	description = input("รายละเอียด: ").strip()
+	due_date = input("วันครบกำหนด (YYYY-MM-DD หรือข้อความ): ").strip()
+
+	task = {
+		'id': next_id,
+		'title': title,
+		'description': description,
+		'due_date': due_date,
+		'completed': False,
+	}
+
+	tasks.append(task)
+	print(f"เพิ่มงานเรียบร้อย (id={next_id})")
 
 
 def view_tasks():
